@@ -11,7 +11,7 @@
 				header('Location: '.base_url().'/login');
 				die();
 			}
-			getPermisos(2);
+			getPermisos(3);
 		}
 
 		public function Sedes()
@@ -148,6 +148,22 @@
 			}
 			die();
 		}
+
+		
+		public function getSelectsedesEntrega(){
+			$htmlOptions = "";
+			$arrData = $this->model->selectSedes();
+			if(count($arrData) > 0 ){
+				for ($i=0; $i < count($arrData); $i++) { 
+					
+					$htmlOptions .= '<option value="'.$arrData[$i]['id'].'">'.$arrData[$i]['nombre'].'</option>';
+					
+				}
+			}
+			echo $htmlOptions;
+			die();	
+		}
+
 
 	}
  ?>

@@ -1,5 +1,6 @@
 <?php 
-    headerAdmin($data); 
+    headerAdmin($data);
+    getModal('modalEntregas',$data); 
 ?>
     <main class="app-content">
       <div class="app-title">
@@ -24,7 +25,6 @@
                         <tr> 
                           <th>ID</th>                       
                           <th>Producto</th>
-                          <th>Fecha vencimiento</th>
                           <th>Cantidad</th>
                           <th>Agregar</th>
 
@@ -43,7 +43,7 @@
                   <div class="table-responsive">
                   <div>
                      <h1><i class="fas fa-box-tissue"></i>Productos seleccionados             
-                   <button class="btn btn-primary" type="button"  ><i class="fas fa-plus-circle"></i> Generar entrega</button>
+                     <input type="button" value="Generar entrega" onclick="openModal();">
          
             </h1>
         </div>
@@ -53,7 +53,6 @@
                  <tr>
                     <th>ID</th>
                     <th>Producto</th>
-                    <th>Fecha vencimiento</th>
                     <th>Cantidad</th>
                    <th>Eliminar</th>
                 </tr>

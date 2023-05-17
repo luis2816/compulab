@@ -30,14 +30,8 @@
 
 		public function selectInsumosEntregas(){
 
-			$sql= "SELECT i.id, t.nombre as nombreCategoria, t.nombre, 
-			i.fabricante, i.lote,
-			i.fecha_vencimiento, i.cantidad
-    FROM insumos as i
-	inner join tipoproducto as t on t.id=i.idTipoproducto
-	inner join categoria as c on c.idcategoria=t.categoria
-	where i.cantidad > 10
-	ORDER by i.fecha_vencimiento ASC";
+			$sql= "SELECT t.id, t.nombre, s.cantidad FROM stock as s
+			inner join tipoproducto as t on t.id=s.id_Tipoproducto";
 	$request = $this->select_all($sql);
 	return $request;
 		}

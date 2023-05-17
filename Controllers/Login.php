@@ -29,7 +29,7 @@
 					$arrResponse = array('status' => false, 'msg' => 'Error de datos' );
 				}else{
 					$strUsuario  =  strtolower(strClean($_POST['txtEmail']));
-					$strPassword = hash("MD5",$_POST['txtPassword']);
+					$strPassword = hash("SHA256",$_POST['txtPassword']);
 					$requestUser = $this->model->loginUser($strUsuario, $strPassword);
 					if(empty($requestUser)){
 						$arrResponse = array('status' => false, 'msg' => 'El usuario o la contraseña es incorrecto.' ); 
@@ -66,6 +66,7 @@
 					if(empty($arrData)){
 						$arrResponse = array('status' => false, 'msg' => 'Usuario no existente.' ); 
 					}else{
+
 						$idpersona = $arrData['idpersona'];
 						$nombreUsuario = $arrData['nombres'].' '.$arrData['apellidos'];
 
@@ -78,13 +79,13 @@
 											 'url_recovery' => $url_recovery);
 						if($requestUpdate){
 							$sendEmail = sendEmail($dataUsuario,'email_cambioPassword');
-
+                            
 							if($sendEmail){
 								$arrResponse = array('status' => true, 
 												 'msg' => 'Se ha enviado un email a tu cuenta de correo para cambiar tu contraseña.');
 							}else{
 								$arrResponse = array('status' => false, 
-												 'msg' => 'No es posible realizar el proceso, intenta más tarde.' );
+												 'msg' => 'No es posible realizar el proceso 2, intenta más tarde.' );
 							}
 						}else{
 							$arrResponse = array('status' => false, 

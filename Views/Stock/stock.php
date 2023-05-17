@@ -1,40 +1,30 @@
 <?php 
     headerAdmin($data); 
-    getModal('modalInsumos',$data);
 ?>
     <main class="app-content">
       <div class="app-title">
         <div>
             <h1><i class="fas fa-box-tissue"></i> <?= $data['page_title'] ?>
-            <?php if($_SESSION['permisosMod']['w']){ ?>
-                <button class="btn btn-primary" type="button" onclick="openModal();" ><i class="fas fa-plus-circle"></i> Nuevo</button>
-              <?php } ?> 
+  
             </h1>
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="<?= base_url(); ?>/insumos"><?= $data['page_title'] ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= base_url(); ?>/stock"><?= $data['page_title'] ?></a></li>
         </ul>
       </div>
-      
         <div class="row">
             <div class="col-md-12">
               <div class="tile">
-              <h3>Listado de insumos</h3>
                 <div class="tile-body">
                   <div class="table-responsive">
-                    <table class="table table-hover table-bordered" id="idTableinsumos">
+                    <table class="table table-hover table-bordered" id="tableStock">
                       <thead>
                         <tr>
                           <th>Categoria</th>
                           <th>Producto</th>
-                          <th>Fabricante</th>
-                          <th>Lote</th>
-                          <th>Fecha entrada</th>
-                          <th>Fecha vencimiento</th>
-                          <th>Dias Habiles</th>
                           <th>Cantidad</th>
-                          <th>Acciones</th>
+                          <th>Estado</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -44,7 +34,7 @@
                 </div>
               </div>
             </div>
-      
+        </div>
     </main>
 <?php footerAdmin($data); ?>
     

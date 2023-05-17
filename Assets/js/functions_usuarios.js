@@ -236,10 +236,6 @@ document.addEventListener('DOMContentLoaded', function(){
 }, false);
 
 
-window.addEventListener('load', function() {
-        fntRolesUsuario();
-}, false);
-
 function fntRolesUsuario(){
     if(document.querySelector('#listRolid')){
         let ajaxUrl = base_url+'/Roles/getSelectRoles';
@@ -373,6 +369,7 @@ function openModal()
     document.querySelector('#btnText').innerHTML ="Guardar";
     document.querySelector('#titleModal').innerHTML = "Nuevo Usuario";
     document.querySelector("#formUsuario").reset();
+    fntRolesUsuario();
     $('#modalFormUsuario').modal('show');
 }
 

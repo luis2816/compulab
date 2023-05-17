@@ -3,14 +3,14 @@ let tableInsumos;
 // Pintamos en una tabla todos los insumos obtenidos por la petición
 document.addEventListener('DOMContentLoaded', function(){
 
-    tableInsumos = $('#idTablaInsumos').dataTable( {
+    tableInsumos = $('#idTableinsumos').dataTable( {
         "aProcessing":true,
         "aServerSide":true,
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
         },
         "ajax":{
-            "url": " "+base_url+"/insumos/getInsumos",
+            "url": base_url+"/insumos/getInsumos",
             "dataSrc":""
         },
         "columns":[
@@ -93,12 +93,6 @@ document.addEventListener('DOMContentLoaded', function(){
 }, false);
 
 // se ejecuta apenas carga la pagina 
-window.addEventListener('load', function() {
-    fntCategorias();
-   
-}, false);
-
-
 // Función para obtener la lista de categorias y poder adicionarselas al select de categoria
 function fntCategorias(){
     if(document.querySelector('#listCategoria')){
@@ -174,11 +168,6 @@ function fntViewInfoInsumo(id){
     }
 }
 
-
-
-
-
-
 function openModal()
 {
     rowTable = "";
@@ -188,6 +177,7 @@ function openModal()
     document.querySelector('#btnText').innerHTML ="Guardar";
     document.querySelector('#titleModal').innerHTML = "Nuevo Insumo";
     document.querySelector("#formInsumo").reset();
+    fntCategorias();
     $('#modalFormInsumos').modal('show');
 }
 

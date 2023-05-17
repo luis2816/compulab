@@ -20,8 +20,8 @@
 	const SMONEY = "Q";
 
 	//Datos envio de correo
-	const NOMBRE_REMITENTE = "Luis felipe ordoñez diaz";
-	const EMAIL_REMITENTE = "ordonezfelipe2816@gmail.com";
+	const NOMBRE_REMITENTE = "Fernando Bolañoz";
+	const EMAIL_REMITENTE = "yfbolanos@gmail.com";
 	const NOMBRE_EMPESA = "Compulab";
 	const WEB_EMPRESA = "www.compulab.com";
 	

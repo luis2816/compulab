@@ -38,12 +38,6 @@
 					if($_SESSION['permisosMod']['r']){
 						$btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfoInsumo('.$arrData[$i]['id'].')" title="Ver Insumo"><i class="far fa-eye"></i></button>';
 					}
-					/*if($_SESSION['permisosMod']['u']){
-						$btnEdit = '<button class="btn btn-primary  btn-sm" onClick="fntEditInfoInsumo(this,'.$arrData[$i]['id'].')" title="Editar Insumo"><i class="fas fa-pencil-alt"></i></button>';
-					}
-					if($_SESSION['permisosMod']['d']){	
-						$btnDelete = '<button class="btn btn-danger btn-sm" onClick="fntDelInfoInsumo('.$arrData[$i]['id'].')" title="Eliminar Insumo"><i class="far fa-trash-alt"></i></button>';
-					}*/
 				
 					$arrData[$i]['options'] = '<div class="text-center">'.$btnView.' '.$btnEdit.' '.$btnDelete.'</div>';
 				   
@@ -66,13 +60,6 @@
 					if($_SESSION['permisosMod']['r']){
 						$btnSelect = '<button  onClick="obtenerDatos(this)" title="Seleccionar Insumo"><i class="fas fa-check-circle text-success"></i></button>';
 					}
-					/*if($_SESSION['permisosMod']['u']){
-						$btnEdit = '<button class="btn btn-primary  btn-sm" onClick="fntEditInfoInsumo(this,'.$arrData[$i]['id'].')" title="Editar Insumo"><i class="fas fa-pencil-alt"></i></button>';
-					}
-					if($_SESSION['permisosMod']['d']){	
-						$btnDelete = '<button class="btn btn-danger btn-sm" onClick="fntDelInfoInsumo('.$arrData[$i]['id'].')" title="Eliminar Insumo"><i class="far fa-trash-alt"></i></button>';
-					}*/
-				
 					$arrData[$i]['options'] = '<div class="text-center">'.$btnSelect.' </div>';
 				   
 					

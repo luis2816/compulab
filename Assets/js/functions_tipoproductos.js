@@ -101,9 +101,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 }, false);
 
-window.addEventListener('load', function() {
-    fntCategoriaTipoproductos();
-}, false);
 
 function fntCategoriaTipoproductos(){
     if(document.querySelector('#listTipocategoria')){
@@ -233,5 +230,6 @@ function openModal()
     document.querySelector('#btnText').innerHTML ="Guardar";
     document.querySelector('#titleModal').innerHTML = "Nuevo Tipo producto";
     document.querySelector("#formTipoproductos").reset();
+    fntCategoriaTipoproductos();
     $('#modalFormTipoproductos').modal('show');
 }
