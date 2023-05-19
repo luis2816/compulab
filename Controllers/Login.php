@@ -66,7 +66,7 @@
 					if(empty($arrData)){
 						$arrResponse = array('status' => false, 'msg' => 'Usuario no existente.' ); 
 					}else{
-
+/*
 						$idpersona = $arrData['idpersona'];
 						$nombreUsuario = $arrData['nombres'].' '.$arrData['apellidos'];
 
@@ -91,6 +91,8 @@
 							$arrResponse = array('status' => false, 
 												 'msg' => 'No es posible realizar el proceso, intenta más tarde.' );
 						}
+						*/
+						$arrResponse = array('status' => true, 'msg' => 'Usuario Existe.' );
 					}
 				}
 				echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);

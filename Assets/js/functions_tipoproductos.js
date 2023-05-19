@@ -1,6 +1,5 @@
 let tableTipoproductos;
 document.addEventListener('DOMContentLoaded', function(){
-
     tableTipoproductos = $('#tableTipoproductos').dataTable( {
         "aProcessing":true,
         "aServerSide":true,
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function(){
         let intCategoria= document.querySelector('#listTipocategoria').value;
         let intStatus = document.querySelector('#listStatus').value; 
         
-        
+        console.log(intCategoria);
         if(strNombre == '' || intCategoria == '' || intStatus == '')
         {
             swal("Atención", "Todos los campos son obligatorios." , "error");
@@ -72,9 +71,10 @@ document.addEventListener('DOMContentLoaded', function(){
         request.onreadystatechange = function(){
            if(request.readyState == 4 && request.status == 200){
                 let objData = JSON.parse(request.responseText);
-                console.log(objData);
+                console.log("enviando objeto" + objData);
                 if(objData.status)
                 {
+             
                     if(rowTable == ""){
                         tableTipoproductos.api().ajax.reload();
                     }else{
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             '<span class="badge badge-success">Activo</span>' : 
                             '<span class="badge badge-danger">Inactivo</span>';
                         rowTable.cells[1].textContent = strNombre;
-                        rowTable.cells[2].textContent = intCategoria;
+                        rowTable.cells[2].textContent = document.querySelector("#listTipocategoria").selectedOptions[0].text;
                         rowTable.cells[3].innerHTML = htmlStatus;
                         rowTable = "";
                     }
@@ -132,7 +132,7 @@ function fntViewTipoproducto(id){
                 '<span class="badge badge-danger">Inactivo</span>';
 
                 document.querySelector("#celNombreproducto").innerHTML = objData.data.nombre;
-                document.querySelector("#celCategoria").innerHTML = objData.data.categoria;
+                document.querySelector("#celCategoria").innerHTML = objData.data.nombreCategoria;
                 document.querySelector("#celEstado").innerHTML = estado;
                 $('#modalViewTipoproducto').modal('show');
             }else{
@@ -144,8 +144,6 @@ function fntViewTipoproducto(id){
 
 function fntEditTipoproducto(element,idTipoproducto){
       
-
-   
     rowTable = element.parentNode.parentNode.parentNode; 
     document.querySelector('#titleModal').innerHTML ="Actualizar Tipo Producto";
     document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
@@ -166,15 +164,15 @@ function fntEditTipoproducto(element,idTipoproducto){
                 document.querySelector("#txtNombre").value = objData.data.nombre;
                 document.querySelector("#listTipocategoria").value = objData.data.categoria;
                 document.querySelector("#listStatus").value = objData.data.estado;
-               
-                
+                $('#listTipocategoria').selectpicker('render');
+
+             
                 if(objData.data.estado == 1){
                     document.querySelector("#listStatus").value = 1;
                 }else{
                     document.querySelector("#listStatus").value = 2;
                 }
                 $('#listStatus').selectpicker('render');
-                $('#listTipocategoria').selectpicker('render');
             }
         }
     

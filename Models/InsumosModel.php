@@ -9,6 +9,8 @@
 		 private $dateFechaEntrada;
 		 private $dateFechaVence;
 		 private $intCantidad;
+		 private $strPresentacioncomercial;
+		 private $strRegistrosanitario;
 		public function __construct()
 		{
 			parent::__construct();
@@ -52,7 +54,9 @@
 		}
 
 		
-		public function insertInsumo( int $idTipoproducto, string $fabricante, string $lote, string $fechaEntrada, string $fechaVence, int $cantidad){
+		public function insertInsumo( int $idTipoproducto, string $fabricante, string $lote, 
+		                              string $fechaEntrada, string $fechaVence, int $cantidad,
+									  string $presentacionComercial, string $registroSanitario){
 
 			$this->intTipoproducto = $idTipoproducto;
 			$this->strFabricante = $fabricante;
@@ -60,16 +64,19 @@
 			$this->dateFechaEntrada = $fechaEntrada;
 			$this->dateFechaVence = $fechaVence;
 			$this->intCantidad = $cantidad;
-			
+			$this->strPresentacioncomercial = $presentacionComercial;
+			$this->strRegistrosanitario = $registroSanitario;
 
-				$query_insert  = "INSERT INTO insumos (idTipoproducto,fabricante,lote, fecha_entrada, fecha_vencimiento, cantidad) 
-				                  VALUES (?,?,?,?,?,?)";
+				$query_insert  = "INSERT INTO insumos (idTipoproducto,fabricante,lote, fecha_entrada, fecha_vencimiento, cantidad, presentacionComercial,registroSanitario) 
+				                  VALUES (?,?,?,?,?,?,?,?)";
 	        	$arrData = array($this->intTipoproducto,
         						$this->strFabricante,
         						$this->strLote,
 								$this->dateFechaEntrada,
 								$this->dateFechaVence,
-								$this->intCantidad,);
+								$this->intCantidad,
+								$this->strPresentacioncomercial,
+							    $this->strRegistrosanitario,);
 	        	$request_insert = $this->insert($query_insert,$arrData);
 	        	$return = $request_insert;
 			

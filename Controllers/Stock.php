@@ -32,7 +32,7 @@
 				for ($i=0; $i < count($arrData); $i++) {
 
 
-					if($arrData[$i]['cantidad'] >= 100)
+					if($arrData[$i]['cantidad'] > 50)
 					{
 						$arrData[$i]['estado'] = '<span class="badge badge-success">Disponible</span>';
 					}else if($arrData[$i]['cantidad'] >10 and $arrData[$i]['cantidad'] <=50 ){

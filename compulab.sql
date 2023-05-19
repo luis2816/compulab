@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-04-2023 a las 18:16:01
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.0.28
+-- Tiempo de generación: 18-05-2023 a las 19:10:02
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `categoria` (
-  `idcategoria` bigint(20) NOT NULL,
+  `idcategoria` int(20) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `descripcion` text NOT NULL,
   `portada` varchar(100) NOT NULL,
@@ -47,16 +47,38 @@ INSERT INTO `categoria` (`idcategoria`, `nombre`, `descripcion`, `portada`, `dat
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_temp`
+-- Estructura de tabla para la tabla `detalleentrega`
 --
 
-CREATE TABLE `detalle_temp` (
-  `id` bigint(20) NOT NULL,
-  `productoid` bigint(20) NOT NULL,
-  `precio` decimal(11,2) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `token` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
+CREATE TABLE `detalleentrega` (
+  `id` int(11) NOT NULL,
+  `idtipoProducto` int(11) NOT NULL,
+  `cantidad_salida` int(11) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `id_sede` int(11) NOT NULL,
+  `codigoFactura` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalleentrega`
+--
+
+INSERT INTO `detalleentrega` (`id`, `idtipoProducto`, `cantidad_salida`, `fecha`, `id_sede`, `codigoFactura`) VALUES
+(68, 2, 10, '2023-05-15 19:19:14', 2, '20230515-866105'),
+(69, 1, 20, '2023-05-15 19:19:14', 2, '20230515-866105'),
+(70, 2, 2, '2023-05-16 09:32:48', 2, '20230516-789598'),
+(71, 1, 4, '2023-05-16 09:32:48', 2, '20230516-789598');
+
+--
+-- Disparadores `detalleentrega`
+--
+DELIMITER $$
+CREATE TRIGGER `actualizar_stock` AFTER INSERT ON `detalleentrega` FOR EACH ROW BEGIN
+    UPDATE stock SET cantidad = cantidad - NEW.cantidad_salida
+    WHERE id_Tipoproducto = NEW.idtipoProducto;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -71,15 +93,31 @@ CREATE TABLE `insumos` (
   `lote` int(11) NOT NULL,
   `fecha_entrada` date NOT NULL,
   `fecha_vencimiento` date NOT NULL,
-  `cantidad` int(11) NOT NULL
+  `cantidad` int(11) NOT NULL,
+  `presentacionComercial` varchar(30) NOT NULL,
+  `registroSanitario` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `insumos`
 --
 
-INSERT INTO `insumos` (`id`, `idTipoproducto`, `fabricante`, `lote`, `fecha_entrada`, `fecha_vencimiento`, `cantidad`) VALUES
-(1, 1, 'Fabricante_1', 1, '2023-04-08', '2024-02-01', 100);
+INSERT INTO `insumos` (`id`, `idTipoproducto`, `fabricante`, `lote`, `fecha_entrada`, `fecha_vencimiento`, `cantidad`, `presentacionComercial`, `registroSanitario`) VALUES
+(7, 2, 'Fabricante_2', 1, '2023-05-15', '2025-03-01', 300, '', ''),
+(8, 1, 'Fabricante_2', 2, '2023-05-15', '2023-06-30', 200, '', ''),
+(9, 2, 'Fabricante_2', 3, '2023-05-15', '2026-08-01', 200, '', ''),
+(10, 4, 'Fabricannte 1', 3, '2023-05-16', '2023-09-15', 10, '', ''),
+(11, 4, 'Fabricante_2', 2, '2023-05-16', '2023-05-26', 500, 'prueba presentacion', 'prueba registro');
+
+--
+-- Disparadores `insumos`
+--
+DELIMITER $$
+CREATE TRIGGER `disparador_insertar_actualizar` AFTER INSERT ON `insumos` FOR EACH ROW INSERT INTO stock (id_Tipoproducto, cantidad)
+    VALUES (NEW.idTipoproducto, NEW.cantidad)
+    ON DUPLICATE KEY UPDATE cantidad = cantidad + NEW.cantidad
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -104,7 +142,9 @@ INSERT INTO `modulo` (`idmodulo`, `titulo`, `descripcion`, `status`) VALUES
 (3, 'sede', 'Sedes de compulab', 1),
 (4, 'Caterogías', 'Caterogías Productos', 1),
 (5, 'Tipo producto', '', 1),
-(6, 'insumos', '', 1);
+(6, 'insumos', '', 1),
+(7, 'Entregas', '', 1),
+(8, 'Stock', 'Inventario general', 1);
 
 -- --------------------------------------------------------
 
@@ -132,7 +172,17 @@ INSERT INTO `permisos` (`idpermiso`, `rolid`, `moduloid`, `r`, `w`, `u`, `d`) VA
 (604, 1, 3, 1, 1, 1, 1),
 (607, 1, 4, 1, 1, 1, 1),
 (608, 1, 5, 1, 1, 1, 1),
-(609, 1, 6, 1, 1, 1, 1);
+(609, 1, 6, 1, 1, 1, 1),
+(610, 1, 7, 1, 1, 1, 1),
+(613, 1, 8, 1, 1, 1, 1),
+(630, 11, 1, 0, 0, 0, 0),
+(631, 11, 2, 0, 0, 0, 0),
+(632, 11, 3, 0, 0, 0, 0),
+(633, 11, 4, 0, 0, 0, 0),
+(634, 11, 5, 0, 0, 0, 0),
+(635, 11, 6, 1, 0, 0, 0),
+(636, 11, 7, 1, 1, 1, 1),
+(637, 11, 8, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -162,26 +212,8 @@ CREATE TABLE `persona` (
 --
 
 INSERT INTO `persona` (`idpersona`, `identificacion`, `nombres`, `apellidos`, `telefono`, `email_user`, `password`, `nit`, `nombrefiscal`, `direccionfiscal`, `token`, `rolid`, `datecreated`, `status`) VALUES
-(1, '1003102569', 'Felipe', 'Ordoñez diaz', 3246338246, 'ordonezfelipe2816@gmail.com', '21232f297a57a5a743894a0e4a801fc3', '24252622', 'Felipe diaz', 'Timbio - Cauca', '', 1, '2020-08-13 00:51:44', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `producto`
---
-
-CREATE TABLE `producto` (
-  `idproducto` bigint(20) NOT NULL,
-  `categoriaid` bigint(20) NOT NULL,
-  `codigo` varchar(30) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `descripcion` text NOT NULL,
-  `precio` decimal(11,2) NOT NULL,
-  `stock` int(11) NOT NULL,
-  `imagen` varchar(100) NOT NULL,
-  `datecreated` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
+(1, '1003102569', 'Felipe', 'Ordoñez diaz', 3246338246, 'ordonezfelipe2816@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '24252622', 'Felipe diaz', 'Timbio - Cauca', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1, '2020-08-13 00:51:44', 1),
+(20, '1003102564', 'Brayan', 'Pacheco', 3267456789, 'brayan@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '', '', '', '', 11, '2023-05-16 22:44:18', 1);
 
 -- --------------------------------------------------------
 
@@ -201,7 +233,8 @@ CREATE TABLE `rol` (
 --
 
 INSERT INTO `rol` (`idrol`, `nombrerol`, `descripcion`, `status`) VALUES
-(1, 'Administrador', 'Acceso a todo el sistema', 1);
+(1, 'Administrador', 'Acceso a todo el sistema', 1),
+(11, 'Vendedor', 'Entrega insumos a las sedes', 1);
 
 -- --------------------------------------------------------
 
@@ -217,6 +250,35 @@ CREATE TABLE `sede` (
   `email` varchar(50) NOT NULL,
   `estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `sede`
+--
+
+INSERT INTO `sede` (`id`, `nombre`, `direccion`, `telefono`, `email`, `estado`) VALUES
+(1, 'Sedes Popayán', 'sede principal', 2147483647, 'popayan@gmail.com', 1),
+(2, 'Sede el tambo', 'sede segundaria', 2147483647, 'elTambo@gmail.com', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `stock`
+--
+
+CREATE TABLE `stock` (
+  `id` int(11) NOT NULL,
+  `id_Tipoproducto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `stock`
+--
+
+INSERT INTO `stock` (`id`, `id_Tipoproducto`, `cantidad`) VALUES
+(6, 2, 30),
+(7, 1, 176),
+(9, 4, 510);
 
 -- --------------------------------------------------------
 
@@ -237,7 +299,9 @@ CREATE TABLE `tipoproducto` (
 
 INSERT INTO `tipoproducto` (`id`, `nombre`, `categoria`, `estado`) VALUES
 (1, 'Reactivo_1', 9, 1),
-(2, 'Reactivos_2', 9, 1);
+(2, 'Reactivos_2', 9, 1),
+(3, 'insumo 1', 10, 1),
+(4, 'insumo_prueba', 10, 1);
 
 --
 -- Índices para tablas volcadas
@@ -250,17 +314,19 @@ ALTER TABLE `categoria`
   ADD PRIMARY KEY (`idcategoria`);
 
 --
--- Indices de la tabla `detalle_temp`
+-- Indices de la tabla `detalleentrega`
 --
-ALTER TABLE `detalle_temp`
+ALTER TABLE `detalleentrega`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `productoid` (`productoid`);
+  ADD KEY `fk_tipoProducto_idTipoproducto` (`idtipoProducto`),
+  ADD KEY `fk_sede_id_sede` (`id_sede`);
 
 --
 -- Indices de la tabla `insumos`
 --
 ALTER TABLE `insumos`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_insumos_idTipoproducto` (`idTipoproducto`);
 
 --
 -- Indices de la tabla `modulo`
@@ -284,13 +350,6 @@ ALTER TABLE `persona`
   ADD KEY `rolid` (`rolid`);
 
 --
--- Indices de la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD PRIMARY KEY (`idproducto`),
-  ADD KEY `categoriaid` (`categoriaid`);
-
---
 -- Indices de la tabla `rol`
 --
 ALTER TABLE `rol`
@@ -303,10 +362,18 @@ ALTER TABLE `sede`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `stock`
+--
+ALTER TABLE `stock`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_id_Tipoproducto` (`id_Tipoproducto`);
+
+--
 -- Indices de la tabla `tipoproducto`
 --
 ALTER TABLE `tipoproducto`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_categoria_idCategoria` (`categoria`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -316,71 +383,78 @@ ALTER TABLE `tipoproducto`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `idcategoria` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idcategoria` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT de la tabla `detalle_temp`
+-- AUTO_INCREMENT de la tabla `detalleentrega`
 --
-ALTER TABLE `detalle_temp`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `detalleentrega`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT de la tabla `insumos`
 --
 ALTER TABLE `insumos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
 --
 ALTER TABLE `modulo`
-  MODIFY `idmodulo` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idmodulo` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `idpermiso` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=610;
+  MODIFY `idpermiso` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=638;
 
 --
 -- AUTO_INCREMENT de la tabla `persona`
 --
 ALTER TABLE `persona`
-  MODIFY `idpersona` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT de la tabla `producto`
---
-ALTER TABLE `producto`
-  MODIFY `idproducto` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idpersona` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `sede`
 --
 ALTER TABLE `sede`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `stock`
+--
+ALTER TABLE `stock`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tipoproducto`
 --
 ALTER TABLE `tipoproducto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `detalle_temp`
+-- Filtros para la tabla `detalleentrega`
 --
-ALTER TABLE `detalle_temp`
-  ADD CONSTRAINT `detalle_temp_ibfk_1` FOREIGN KEY (`productoid`) REFERENCES `producto` (`idproducto`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `detalleentrega`
+  ADD CONSTRAINT `fk_sede_id_sede` FOREIGN KEY (`id_sede`) REFERENCES `sede` (`id`),
+  ADD CONSTRAINT `fk_tipoProducto_idTipoproducto` FOREIGN KEY (`idtipoProducto`) REFERENCES `tipoproducto` (`id`);
+
+--
+-- Filtros para la tabla `insumos`
+--
+ALTER TABLE `insumos`
+  ADD CONSTRAINT `fk_insumos_idTipoproducto` FOREIGN KEY (`idTipoproducto`) REFERENCES `tipoproducto` (`id`);
 
 --
 -- Filtros para la tabla `permisos`
@@ -396,10 +470,16 @@ ALTER TABLE `persona`
   ADD CONSTRAINT `persona_ibfk_1` FOREIGN KEY (`rolid`) REFERENCES `rol` (`idrol`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `producto`
+-- Filtros para la tabla `stock`
 --
-ALTER TABLE `producto`
-  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`categoriaid`) REFERENCES `categoria` (`idcategoria`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `stock`
+  ADD CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`id_Tipoproducto`) REFERENCES `tipoproducto` (`id`);
+
+--
+-- Filtros para la tabla `tipoproducto`
+--
+ALTER TABLE `tipoproducto`
+  ADD CONSTRAINT `fk_categoria_idCategoria` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`idcategoria`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

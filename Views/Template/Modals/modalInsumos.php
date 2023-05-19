@@ -33,7 +33,7 @@
              </div>
 
              <div class="row">
-                 <div class="col-md-6">
+                 <div class="col-md-4">
                     <div class="form-group">
                       <label class="control-label">Fabricante <span class="required">*</span></label>
                       <input class="form-control" id="txtFabricante" name="txtFabricante" type="text" placeholder="Nombre  de Fabricante" required="">
@@ -46,8 +46,21 @@
 
 
                  </div>
+                 <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Presentación comercial <span class="required">*</span></label>
+                      <input class="form-control" id="txtPresentacioncomercial" name="txtPresentacioncomercial" type="text" placeholder="Presentación comercial" required="">
+                     </div>
 
-                 <div class="col-md-6">
+                     <div class="form-group">
+                      <label class="control-label">Registro sanitario <span class="required">*</span></label>
+                      <input class="form-control" id="txtRegistrosanitario" name="txtRegistrosanitario" type="text" placeholder="Registro sanitario" required="">                      
+                    </div> 
+
+
+                 </div>
+
+                 <div class="col-md-4">
                  <div class="form-group">
                         <label class="control-label">Fecha Vencimiento <span class="required">*</span></label>
                         <input class="form-control" id="txtFechaVencimiento" name="txtFechaVencimiento" type="date" placeholder="Fecha de Vencimiento" min="<?php echo date('Y-m-d'); ?>" required="">

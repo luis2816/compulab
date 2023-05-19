@@ -73,7 +73,8 @@
 		public function setInsumo(){
 			if($_POST){			
 				if(empty($_POST['listCategoria']) || empty($_POST['listProductosxcategoria']) || empty($_POST['txtFabricante'])
-				        || empty($_POST['txtLote']) || empty($_POST['txtFechaVencimiento']) || empty($_POST['txtCantidad']) )
+				        || empty($_POST['txtLote']) || empty($_POST['txtFechaVencimiento']) || empty($_POST['txtCantidad']) 
+						|| empty($_POST['txtPresentacioncomercial']) || empty($_POST['txtRegistrosanitario']))
 				{
 					$arrResponse = array("status" => false, "msg" => 'Datos incorrectos.');
 				}
@@ -84,11 +85,14 @@
 					$strLote = strClean($_POST['txtLote']);
 					$strFechavence = ($_POST['txtFechaVencimiento']);
 					$intCantidad = intval(strClean($_POST['txtCantidad']));
+					$strPresentacioncomercial = strClean($_POST['txtPresentacioncomercial']);
+					$strRegistrosanitario = strClean($_POST['txtRegistrosanitario']);
 					$fecha_actual = date("Y-m-d");
 
 					  if($_SESSION['permisosMod']['w']){
 						$request_user = $this->model->insertInsumo( $idTipoproducto, $strFabricate, $strLote,
-					                                                $fecha_actual, $strFechavence,$intCantidad);
+					                                                $fecha_actual, $strFechavence,$intCantidad,
+																	$strPresentacioncomercial,$strRegistrosanitario);
 					  }
 
 					  if($request_user > 0){
@@ -97,38 +101,7 @@
 					}
 
 				}
-				/*	if($id == 0)
-					{
-						
 
-						if($_SESSION['permisosMod']['w']){
-							$request_user = $this->model->insertTipoproduto( $strNombre, $intTipocategoria, $intEstado);
-						}
-						$option = 1;
-				   }else{
-						
-						if($_SESSION['permisosMod']['u']){
-							$request_user = $this->model->updateTipoproducto($id,$strNombre, $intTipocategoria, $intEstado);
-						}
-						$option = 2;
-
-					}
-
-					if($request_user > 0)
-					{
-						if($option == 1){
-							$arrResponse = array('status' => true, 'msg' => 'Creación correcta' );
-						}else{
-							$arrResponse = array('status' => true, 'msg' => 'Datos Actualizados correctamente.');
-						}
-					}else if($request_user == 0){
-						$arrResponse = array('status' => false, 'msg' => '¡Atención! el tipo de producto ya existe, ingrese otro.');		
-					}else{
-						$arrResponse = array("status" => false, "msg" => 'No es posible almacenar los datos.' );
-					}
-				}
-				echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
-			}*/
 			echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
 			die();
 		}
